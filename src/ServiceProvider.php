@@ -18,6 +18,10 @@ class ServiceProvider extends BaseServiceProvider
             $streplyClient = new StreplyClient(config('streply-laravel.dsn'), ['environment' => config('app.env')]);
 
             $streplyClient->initialize();
+
+            $this->app->terminating(function () {
+                \Streply\Flush();
+            });
         }
 
         if ($this->app->runningInConsole()) {
