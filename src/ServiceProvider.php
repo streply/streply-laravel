@@ -7,6 +7,7 @@ use Streply\Exceptions\InvalidUserException;
 use Streply\StreplyLaravel\Console\PublishCommand;
 use Illuminate\Foundation\Application as Laravel;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
+use Streply\Store\Providers\MemoryProvider;
 
 class ServiceProvider extends BaseServiceProvider
 {
@@ -17,13 +18,15 @@ class ServiceProvider extends BaseServiceProvider
     public function boot(): void
     {
         if (null !== config('streply-laravel.dsn')) {
-            $streplyClient = new StreplyClient(config('streply-laravel.dsn'), ['environment' => config('app.env')]);
+            $streplyClient = new StreplyClient(config('streply-laravel.dsn'), [
+				'environment' => config('app.env'),
+				'storeProvider' => new MemoryProvider(),
+			]);
 
             $streplyClient->initialize();
 
-            $streplyClient->user();
-
             $this->app->terminating(function () use ($streplyClient) {
+				$streplyClient->user();
 				$streplyClient->flush();
             });
         }
