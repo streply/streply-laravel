@@ -51,7 +51,7 @@ class StreplyClient
 	public function user(): void
     {
         if(Auth::check()) {
-            Streply::User(Auth::id());
+            Streply::User(Auth::id(), Auth::user()->name ?? null);
         }
     }
 }
