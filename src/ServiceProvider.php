@@ -2,16 +2,17 @@
 
 namespace Streply\StreplyLaravel;
 
+use Streply\Exceptions\InvalidDsnException;
+use Streply\Exceptions\InvalidUserException;
 use Streply\StreplyLaravel\Console\PublishCommand;
 use Illuminate\Foundation\Application as Laravel;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Streply\Exceptions\InvalidDsnException;
 
 class ServiceProvider extends BaseServiceProvider
 {
     /**
      * @throws InvalidDsnException
-	 * @return void
+     * @throws InvalidUserException
      */
     public function boot(): void
     {
@@ -19,6 +20,8 @@ class ServiceProvider extends BaseServiceProvider
             $streplyClient = new StreplyClient(config('streply-laravel.dsn'), ['environment' => config('app.env')]);
 
             $streplyClient->initialize();
+
+            $streplyClient->user();
 
             $this->app->terminating(function () use ($streplyClient) {
 				$streplyClient->flush();
