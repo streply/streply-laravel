@@ -11,16 +11,17 @@ class ServiceProvider extends BaseServiceProvider
 {
     /**
      * @throws InvalidDsnException
+	 * @return void
      */
-    public function boot()
+    public function boot(): void
     {
         if (null !== config('streply-laravel.dsn')) {
             $streplyClient = new StreplyClient(config('streply-laravel.dsn'), ['environment' => config('app.env')]);
 
             $streplyClient->initialize();
 
-            $this->app->terminating(function () {
-                \Streply\Flush();
+            $this->app->terminating(function () use ($streplyClient) {
+				$streplyClient->flush();
             });
         }
 

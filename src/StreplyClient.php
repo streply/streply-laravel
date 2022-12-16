@@ -27,11 +27,19 @@ class StreplyClient
         $this->options = $options;
     }
 
-    /**
-     * @throws InvalidDsnException
-     */
-    public function initialize()
+	/**
+	 * @return void
+	 */
+    public function initialize(): void
     {
         Streply::Initialize($this->dsn, $this->options);
     }
+
+	/**
+	 * @return void
+	 */
+	public function flush(): void
+	{
+		Streply::Flush();
+	}
 }
