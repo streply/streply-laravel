@@ -40,7 +40,7 @@ class ServiceProvider extends BaseServiceProvider
 				$this->streplyClient->user();
 
 				if(isset(\Route::getCurrentRoute()->uri) && is_string(\Route::getCurrentRoute()->uri)) {
-					$this->streplyClient->setRoute(\Route::getCurrentRoute()->uri));
+					$this->streplyClient->setRoute(\Route::getCurrentRoute()->uri);
 				}
 
 				$this->streplyClient->flush();
