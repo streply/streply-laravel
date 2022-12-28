@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Auth;
 use Streply\Exceptions\InvalidDsnException;
 use Streply\Exceptions\InvalidUserException;
 use Streply\Streply;
+use function Streply\Log;
 
 class StreplyClient
 {
@@ -53,5 +54,14 @@ class StreplyClient
         if(Auth::check()) {
             Streply::User(Auth::id(), Auth::user()->name ?? null);
         }
+    }
+
+    /**
+     * @param string $name
+     * @param array $parameters
+     */
+    public function log(string $name, array $parameters = []): void
+    {
+        Log($name, $parameters);
     }
 }
