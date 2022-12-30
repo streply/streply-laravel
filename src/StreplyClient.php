@@ -71,6 +71,6 @@ class StreplyClient
 	 */
 	public function setRoute(?string $route): void
 	{
-		Streply::parameterBag()->set('performance.route', $route);
+		Streply::Properties()->setForPerformance('route', $route);
 	}
 }
