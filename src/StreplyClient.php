@@ -5,6 +5,7 @@ namespace Streply\StreplyLaravel;
 use Illuminate\Support\Facades\Auth;
 use Streply\Exceptions\InvalidDsnException;
 use Streply\Exceptions\InvalidUserException;
+use Streply\Responses\Entity;
 use Streply\Streply;
 use function Streply\Log;
 
@@ -56,13 +57,14 @@ class StreplyClient
         }
     }
 
-    /**
-     * @param string $name
-     * @param array $parameters
-     */
-    public function log(string $name, array $parameters = []): void
+	/**
+	 * @param string $name
+	 * @param array $parameters
+	 * @return Entity
+	 */
+    public function log(string $name, array $parameters = []): Entity
     {
-        Log($name, $parameters);
+        return Log($name, $parameters);
     }
 
 	/**

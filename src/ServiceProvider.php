@@ -9,6 +9,7 @@ use Streply\StreplyLaravel\Console\PublishCommand;
 use Illuminate\Foundation\Application as Laravel;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Streply\Store\Providers\MemoryProvider;
+use Streply\Enum\EventFlag;
 
 class ServiceProvider extends BaseServiceProvider
 {
@@ -77,7 +78,15 @@ class ServiceProvider extends BaseServiceProvider
     {
         Event::listen(CommandFinished::class, function (CommandFinished $event) {
             if($this->isInitialized) {
-                $this->streplyClient->log($event->command, $event->input->getArguments());
+                $this->streplyClient
+					->log(
+						$event->command,
+						$event->input->getArguments()
+					)
+					->flag(
+						EventFlag::COMMAND
+					)
+				;
             }
         });
     }
