@@ -7,7 +7,6 @@ use Streply\Exceptions\InvalidDsnException;
 use Streply\Exceptions\InvalidUserException;
 use Streply\Responses\Entity;
 use Streply\Streply;
-use function Streply\Log;
 
 class StreplyClient
 {
@@ -62,9 +61,9 @@ class StreplyClient
 	 * @param array $parameters
 	 * @return Entity
 	 */
-    public function log(string $name, array $parameters = []): Entity
+    public function activity(string $name, array $parameters = []): Entity
     {
-        return Log($name, $parameters);
+        return \Streply\Activity($name, $parameters);
     }
 
 	/**

@@ -79,7 +79,7 @@ class ServiceProvider extends BaseServiceProvider
         Event::listen(CommandFinished::class, function (CommandFinished $event) {
             if($this->isInitialized) {
                 $this->streplyClient
-					->log(
+					->activity(
 						$event->command,
 						$event->input->getArguments()
 					)
