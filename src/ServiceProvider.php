@@ -77,7 +77,7 @@ class ServiceProvider extends BaseServiceProvider
     protected function listenArtisanCommands(): void
     {
         Event::listen(CommandFinished::class, function (CommandFinished $event) {
-            if($this->isInitialized) {
+            if($this->isInitialized && is_string($event->command)) {
                 $this->streplyClient
 					->activity(
 						$event->command,
