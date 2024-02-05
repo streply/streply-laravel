@@ -1,5 +1,6 @@
 {
     "name": "streply/streply-laravel",
+    "description": "Streply Laravel SDK",
     "license": "MIT",
     "autoload": {
         "psr-4": {
