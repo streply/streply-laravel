@@ -7,14 +7,8 @@ use Illuminate\Console\Command;
 
 class PublishCommand extends Command
 {
-    /**
-     * @var string
-     */
-    protected $signature = 'streply-laravel:publish {dsn}';
+    protected string $signature = 'streply-laravel:publish {dsn}';
 
-    /**
-     * @return int
-     */
     public function handle(): int
     {
         $this->info('Publishing streply-laravel config...');
@@ -27,10 +21,6 @@ class PublishCommand extends Command
         return 0;
     }
 
-    /**
-     * @param array $values
-     * @return bool
-     */
     private function setEnvValues(array $values): bool
     {
         $envFilePath = app()->environmentFilePath();
@@ -66,11 +56,6 @@ class PublishCommand extends Command
         return true;
     }
 
-    /**
-     * @param string $envKey
-     * @param string|null $envFileContents
-     * @return bool
-     */
     private function isEnvKeySet(string $envKey, ?string $envFileContents = null): bool
     {
         $envFileContents = $envFileContents ?? file_get_contents(app()->environmentFilePath());

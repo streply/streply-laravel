@@ -13,19 +13,10 @@ use Streply\Enum\EventFlag;
 
 class ServiceProvider extends BaseServiceProvider
 {
-    /**
-     * @var StreplyClient
-     */
     private StreplyClient $streplyClient;
 
-    /**
-     * @var bool
-     */
     private bool $isInitialized = false;
 
-    /**
-     * @throws InvalidDsnException
-     */
     public function boot(): void
     {
         if(null !== config('streply-laravel.dsn')) {
@@ -61,9 +52,6 @@ class ServiceProvider extends BaseServiceProvider
         }
     }
 
-    /**
-     * @return void
-     */
     protected function registerArtisanCommands(): void
     {
         $this->commands([
@@ -71,22 +59,15 @@ class ServiceProvider extends BaseServiceProvider
         ]);
     }
 
-    /**
-     * @return void
-     */
     protected function listenArtisanCommands(): void
     {
         Event::listen(CommandFinished::class, function (CommandFinished $event) {
             if($this->isInitialized && is_string($event->command)) {
-                $this->streplyClient
-					->activity(
-						$event->command,
-						$event->input->getArguments()
-					)
-					->flag(
-						EventFlag::COMMAND
-					)
-				;
+                $this->streplyClient->activity(
+                    $event->command,
+                    $event->input->getArguments(),
+                    EventFlag::COMMAND
+                );
             }
         });
     }
