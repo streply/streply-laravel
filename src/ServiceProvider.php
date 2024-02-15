@@ -53,7 +53,15 @@ class ServiceProvider extends BaseServiceProvider
     {
         Event::listen(CommandFinished::class, function (CommandFinished $event) {
             if($this->isInitialized && is_string($event->command)) {
-                \Streply\Activity($event->command, $event->input->getArguments(), null, EventFlag::COMMAND);
+                \Streply\Activity(
+                    $event->command,
+                    [
+                        'input' => $event->input->getArguments(),
+                        'output' => $event->output->fetch(),
+                    ],
+                    null,
+                    EventFlag::COMMAND
+                );
             }
         });
     }
