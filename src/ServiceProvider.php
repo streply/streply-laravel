@@ -24,17 +24,9 @@ class ServiceProvider extends BaseServiceProvider
 			]);
 
             $this->streplyClient->initialize();
+            $this->streplyClient->user();
+
             $this->isInitialized = true;
-
-            $this->app->terminating(function () {
-				$this->streplyClient->user();
-
-				if(isset(\Route::getCurrentRoute()->uri) && is_string(\Route::getCurrentRoute()->uri)) {
-					$this->streplyClient->setRoute(\Route::getCurrentRoute()->uri);
-				}
-
-				$this->streplyClient->flush();
-            });
         }
 
         if($this->app->runningInConsole()) {
@@ -61,11 +53,7 @@ class ServiceProvider extends BaseServiceProvider
     {
         Event::listen(CommandFinished::class, function (CommandFinished $event) {
             if($this->isInitialized && is_string($event->command)) {
-                $this->streplyClient->activity(
-                    $event->command,
-                    $event->input->getArguments(),
-                    EventFlag::COMMAND
-                );
+                \Streply\Activity($event->command, $event->input->getArguments(), null, EventFlag::COMMAND);
             }
         });
     }
