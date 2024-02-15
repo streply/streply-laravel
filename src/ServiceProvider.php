@@ -8,7 +8,6 @@ use Streply\Exceptions\InvalidDsnException;
 use Streply\StreplyLaravel\Console\PublishCommand;
 use Illuminate\Foundation\Application as Laravel;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
-use Streply\Store\Providers\MemoryProvider;
 use Streply\Enum\EventFlag;
 
 class ServiceProvider extends BaseServiceProvider
@@ -22,7 +21,6 @@ class ServiceProvider extends BaseServiceProvider
         if(null !== config('streply-laravel.dsn')) {
             $this->streplyClient = new StreplyClient(config('streply-laravel.dsn'), [
 				'environment' => config('app.env'),
-				'storeProvider' => new MemoryProvider(),
 			]);
 
             $this->streplyClient->initialize();
