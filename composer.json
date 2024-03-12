@@ -1,14 +1,33 @@
 {
     "name": "streply/streply-laravel",
     "description": "Streply Laravel SDK",
+    "homepage": "https://streply.com",
+    "type": "library",
+    "keywords": ["streply", "php", "laravel", "log", "logging", "error-monitoring", "error-handler"],
     "license": "MIT",
+    "authors": [
+        {
+            "name": "Streply",
+            "email": "support@streply.com"
+        }
+    ],
     "autoload": {
-        "psr-4": {
-            "Streply\\StreplyLaravel\\": "src/"
+        "psr-0": {
+            "Streply\\Laravel\\": "src/"
         }
     },
     "require": {
+        "php": "^7.4 | ^8.0",
         "laravel/framework": "^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0",
         "streply/streply-php": "*"
-    }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Streply\\Laravel\\ServiceProvider"
+            ]
+        }
+    },
+    "prefer-stable": true,
+    "minimum-stability": "dev"
 }

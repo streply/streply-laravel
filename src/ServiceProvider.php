@@ -1,30 +1,28 @@
 <?php
 
-namespace Streply\StreplyLaravel;
+namespace Streply\Laravel;
 
 use Illuminate\Console\Events\CommandFinished;
 use Illuminate\Support\Facades\Event;
 use Streply\Exceptions\InvalidDsnException;
-use Streply\StreplyLaravel\Console\PublishCommand;
+use Streply\Laravel\Console\PublishCommand;
 use Illuminate\Foundation\Application as Laravel;
 use Illuminate\Support\ServiceProvider as BaseServiceProvider;
 use Streply\Enum\EventFlag;
 
 class ServiceProvider extends BaseServiceProvider
 {
-    private StreplyClient $streplyClient;
-
     private bool $isInitialized = false;
 
     public function boot(): void
     {
         if(null !== config('streply-laravel.dsn')) {
-            $this->streplyClient = new StreplyClient(config('streply-laravel.dsn'), [
+            $client = new StreplyClient(config('streply-laravel.dsn'), [
 				'environment' => config('app.env'),
 			]);
 
-            $this->streplyClient->initialize();
-            $this->streplyClient->user();
+            $client->initialize();
+            $client->user();
 
             $this->isInitialized = true;
         }

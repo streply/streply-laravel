@@ -1,8 +1,8 @@
 <?php
 
-namespace Streply\StreplyLaravel\Console;
+namespace Streply\Laravel\Console;
 
-use Streply\StreplyLaravel\ServiceProvider;
+use Streply\Laravel\ServiceProvider;
 use Illuminate\Console\Command;
 
 class PublishCommand extends Command

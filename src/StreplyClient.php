@@ -1,6 +1,6 @@
 <?php
 
-namespace Streply\StreplyLaravel;
+namespace Streply\Laravel;
 
 use Illuminate\Support\Facades\Auth;
 use Streply\Exceptions\InvalidDsnException;
