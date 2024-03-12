@@ -10,6 +10,8 @@ composer require streply/streply-laravel
 
 ### Add the service provider to config/app.php
 
+This step is needed only for Laravel versions below 11.X.
+
 ```php {filename:config.app.php}
 Streply\Laravel\ServiceProvider::class,
 ```
