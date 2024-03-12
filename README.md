@@ -11,11 +11,46 @@ composer require streply/streply-laravel
 ### Add the service provider to config/app.php
 
 ```php {filename:config.app.php}
-Streply\StreplyLaravel\ServiceProvider::class,
+Streply\Laravel\ServiceProvider::class,
 ```
 
-### Enable capturing exception in App/Exceptions/Handler.php:
+## Enable capturing exception
+
+### Laravel 11.X
+
+Enable capturing exception in bootstrap/app.php:
+
+```php {filename:bootstrap/app.php}
+<?php
+
+use Illuminate\Foundation\Application;
+use Illuminate\Foundation\Configuration\Exceptions;
+use Illuminate\Foundation\Configuration\Middleware;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+    )
+    ->withMiddleware(function (Middleware $middleware) {
+        //
+    })
+    ->withExceptions(function (Exceptions $exceptions) {
+        $exceptions->reportable(static function (Throwable $exception) {
+            \Streply\Exception($exception);
+        });
+    })->create();
+
+```
+
+### Laravel 8.x, 9.x and 10.x
+
+Enable capturing exception in App/Exceptions/Handler.php:
+
 ```php {filename:App/Exceptions/Handler.php}
+<?php
+
 public function register()
 {
     $this->reportable(function (Throwable $e) {
@@ -30,5 +65,5 @@ public function register()
 Configure the Streply DSN with this command:
 
 ```shell
-php artisan streply-laravel:publish https://clientPublicKey@api.streply.com/projectId
+php artisan streply:publish https://clientPublicKey@api.streply.com/projectId
 ```

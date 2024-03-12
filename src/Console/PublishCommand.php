@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class PublishCommand extends Command
 {
-    protected $signature = 'streply-laravel:publish {dsn}';
+    protected $signature = 'streply:publish {dsn}';
 
     public function handle(): int
     {
