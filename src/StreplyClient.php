@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Streply\Laravel;
 
 use Illuminate\Support\Facades\Auth;
@@ -10,25 +12,25 @@ use Streply\Streply;
 
 class StreplyClient
 {
-    protected string $dsn;
-
-    protected array $options;
-
-    public function __construct(string $dsn, array $options)
-    {
-        $this->dsn = $dsn;
-        $this->options = $options;
-    }
+    public function __construct(
+        protected string $dsn,
+        protected array $options
+    ) {}
 
     public function initialize(): void
     {
         Streply::Initialize($this->dsn, $this->options);
     }
 
-	public function user(): void
+    public function user(): void
     {
-        if(Auth::check()) {
-            Streply::User(Auth::id(), Auth::user()->name ?? null);
+        if (!Auth::check()) {
+            return;
         }
+
+        $user = Auth::user();
+        $userName = $user?->name ?? $user?->username ?? null;
+
+        Streply::User(Auth::id(), $userName);
     }
 }

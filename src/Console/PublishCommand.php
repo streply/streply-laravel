@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Streply\Laravel\Console;
 
 use Streply\Laravel\ServiceProvider;
@@ -27,9 +29,8 @@ class PublishCommand extends Command
 
         $envFileContents = file_get_contents($envFilePath);
 
-        if (!$envFileContents) {
+        if ($envFileContents === false) {
             $this->error('Could not read `.env` file!');
-
             return false;
         }
 
@@ -49,7 +50,6 @@ class PublishCommand extends Command
 
         if (!file_put_contents($envFilePath, $envFileContents)) {
             $this->error('Updating the `.env` file failed!');
-
             return false;
         }
 
@@ -58,7 +58,7 @@ class PublishCommand extends Command
 
     private function isEnvKeySet(string $envKey, ?string $envFileContents = null): bool
     {
-        $envFileContents = $envFileContents ?? file_get_contents(app()->environmentFilePath());
+        $envFileContents ??= file_get_contents(app()->environmentFilePath());
 
         return (bool)preg_match("/^{$envKey}=.*?[\s$]/m", $envFileContents);
     }
