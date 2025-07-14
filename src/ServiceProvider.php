@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Streply\Laravel;
 
 use Illuminate\Console\Events\CommandFinished;
@@ -16,50 +18,65 @@ class ServiceProvider extends BaseServiceProvider
 
     public function boot(): void
     {
-        if(null !== config('streply-laravel.dsn')) {
-            $client = new StreplyClient(config('streply-laravel.dsn'), [
-				'environment' => config('app.env'),
-			]);
+        $this->initializeStreply();
 
-            $client->initialize();
-            $client->user();
-
-            $this->isInitialized = true;
-        }
-
-        if($this->app->runningInConsole()) {
-            if($this->app instanceof Laravel) {
-                $this->publishes([
-                    __DIR__ . '/../config/streply-laravel.php' => config_path('streply-laravel.php'),
-                ], 'config');
-
-                $this->listenArtisanCommands();
-            }
-
-            $this->registerArtisanCommands();
+        if ($this->app->runningInConsole()) {
+            $this->registerConsoleFeatures();
         }
     }
 
-    protected function registerArtisanCommands(): void
+    private function initializeStreply(): void
+    {
+        $dsn = config('streply-laravel.dsn');
+
+        if (empty($dsn)) {
+            return;
+        }
+
+        $client = new StreplyClient($dsn, [
+            'environment' => config('app.env'),
+        ]);
+
+        $client->initialize();
+        $client->user();
+
+        $this->isInitialized = true;
+    }
+
+    private function registerConsoleFeatures(): void
+    {
+        if ($this->app instanceof Laravel) {
+            $this->publishes([
+                __DIR__ . '/../config/streply-laravel.php' => config_path('streply-laravel.php'),
+            ], 'config');
+
+            $this->listenArtisanCommands();
+        }
+
+        $this->registerArtisanCommands();
+    }
+
+    private function registerArtisanCommands(): void
     {
         $this->commands([
             PublishCommand::class,
         ]);
     }
 
-    protected function listenArtisanCommands(): void
+    private function listenArtisanCommands(): void
     {
-        Event::listen(CommandFinished::class, function (CommandFinished $event) {
-            if($this->isInitialized && is_string($event->command)) {
-                $command = $event->command;
-                $arguments = $event->input->getArguments();
-
-                \Streply\withScope(function (\Streply\Scope $scope) use ($command, $arguments): void {
-                    $scope->setFlag(EventFlag::COMMAND);
-
-                    \Streply\Activity($command, $arguments);
-                });
+        Event::listen(CommandFinished::class, function (CommandFinished $event): void {
+            if (!$this->isInitialized || !is_string($event->command)) {
+                return;
             }
+
+            $command = $event->command;
+            $arguments = $event->input->getArguments();
+
+            \Streply\withScope(function (\Streply\Scope $scope) use ($command, $arguments): void {
+                $scope->setFlag(EventFlag::COMMAND);
+                \Streply\Activity($command, $arguments);
+            });
         });
     }
 }
